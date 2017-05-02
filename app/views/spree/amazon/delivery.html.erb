@@ -6,6 +6,21 @@
 <%# @copyright   Copyright (c) 2014 Amazon.com %>
 <%# @license     http://opensource.org/licenses/Apache-2.0  Apache License, Version 2.0 %>
 <%# %>
+
+
+
+
 <%= form_for current_order, :url => confirm_amazon_order_path, :method => :post do |form| %>
-  <%= render partial: 'spree/checkout/delivery', locals: {form: form} %>
+
+    <div class="clear"></div>
+    <div class="_shipping">
+      <%= render :partial => 'spree/checkout/shipping' %>
+    </div>
+    <div class="clear"></div>
+    <div class=" text-right form-buttons" data-hook="buttons">
+      <%= submit_tag Spree.t(:place_order), :class => 'btn btn-lg btn-success' %>
+    </div>
+
+    <%#= render partial: 'spree/checkout/delivery', locals: {form: form} %>
+
 <% end %>

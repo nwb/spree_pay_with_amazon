@@ -13,6 +13,11 @@
     window.onAmazonLoginReady = function() {
       amazon.Login.setClientId('<%= Spree::Config[:amazon_client_id] %>');
       $('#continue_to_delivery').click();
+      setTimeout(function(){
+        $('.widget-container').css('position', 'inherit');
+        $('iframe').css('height', 'auto');
+      },1500);
+
     };
   </script>
   <script type='text/javascript'
@@ -50,9 +55,30 @@
   </script>
 <% end %>
 
-<div class="row">
+<div class="row" style="margin-top:20px;clear:both;float:none;">
 
-  <div class="col-md-6 col-xs-12">
+  <!--added the cart information here-->
+  <div data-hook="outside_cart_form">
+    <%= form_for current_order, :url => '/update_only', :html => {:id => 'update-cart'} do |order_form| %>
+        <div class="inside_cart_form" data-hook="inside_cart_form">
+
+          <div data-hook="cart_items">
+            <%= render partial: 'spree/orders/form', locals: { order_form: order_form } %>
+          </div>
+
+          <!--div class="links columns sixteen alpha omega" data-hook="cart_buttons">
+            <%= button_tag :class => 'primary', :id => 'update-button' do %>
+                <%#= Spree.t(:update) %>
+            <% end %>
+          </div-->
+
+        </div>
+    <% end %>
+  </div>
+
+  <div class="clear" style="height:20px"></div>
+
+  <div class="col-md-6 col-xs-12" style="min-height:170px">
     <div id="addressBookWidgetDiv">
     </div>
   </div>
@@ -66,8 +92,23 @@
     <%= link_to Spree.t(:save_and_continue), "/amazon_order/delivery", :class => 'btn btn-lg btn-success', :id => 'continue_to_delivery', :remote => true %>
   </div>
 
-  <div id="deliveryOptionDiv" class="col-md-12">
+  <div id="deliveryOptionDiv" class="col-md-12" style="">
     Loading...
   </div>
 
 </div>
+
+<script>
+$(document).ready(function() {
+  $('.widget-container').css('position', 'inherit');
+  $('iframe').css('height', 'auto');
+
+  $('.line_item_quantity').on('change', function(){
+    //update_weeks($(this).parents('tr').find('.current_weeks'), $(this).val());
+    //update_my_cart();
+    $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
+  });
+
+});
+
+</script>

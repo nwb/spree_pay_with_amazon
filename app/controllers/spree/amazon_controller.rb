@@ -16,6 +16,7 @@ class Spree::AmazonController < Spree::StoreController
   respond_to :json
 
   def address
+    @order=current_order
     current_order.state = 'cart'
     current_order.save!
   end
@@ -33,6 +34,7 @@ class Spree::AmazonController < Spree::StoreController
 
   def delivery
     data = @mws.fetch_order_data
+    @order = current_order
     current_order.state = 'cart'
 
     if data.destination && data.destination["PhysicalDestination"]
@@ -64,6 +66,7 @@ class Spree::AmazonController < Spree::StoreController
   def confirm
 
     if current_order.update_from_params(params, permitted_checkout_attributes, request.headers.env)
+
 
       @mws.set_order_data(current_order.total, current_order.currency)
 

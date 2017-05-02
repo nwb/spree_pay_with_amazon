@@ -1,0 +1,8 @@
+<% ship_form.object.order.line_items.each do |item| %>
+    <tr class="stock-item">
+      <td class="item-image"><%= mini_image(item.variant) %></td>
+      <td class="item-name"><%= item.variant.name %></td>
+      <td class="item-qty"><%= item.quantity %></td>
+      <td class="item-price"><%= Spree::Money.new(item.price, currency: current_currency).to_html %></td>
+    </tr>
+<% end %>

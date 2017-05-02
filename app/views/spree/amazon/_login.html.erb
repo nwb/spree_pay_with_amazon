@@ -10,6 +10,17 @@
   window.onAmazonLoginReady = function() {
     amazon.Login.setClientId('<%= Spree::Config[:amazon_client_id] %>');
   };
+
+  //the link from fixed checkout button for mobile
+  $(document).ready(function() {
+    $('#checkout-link').after($('#amazon-container'));
+    var size=$('#_checkout-fixed span').length;
+    var target_class='col-xs-' + 12/size ;
+    $('#_checkout-fixed span').removeClass('col-xs-12').removeClass('col-xs-6').addClass("_inserted");
+    $('#_checkout-fixed').append('<span class="_inserted"><button name="amazon_link" id="amazon_link" onclick="$(\'#AmazonPayButton img\').click();" type="button"><img src="/assets/ui/amazon_logo_trans.png"/> <div>Pay</div></button></span>');
+    $('#_checkout-fixed span._inserted').addClass(target_class);
+  });
+
 </script>
 <script type='text/javascript'
   src='https://static-na.payments-amazon.com/OffAmazonPayments/us/<%= Spree::Gateway::Amazon.first.preferred_test_mode ? 'sandbox/' : '' %>js/Widgets.js?sellerId=<%= Spree::Config[:amazon_merchant_id] %>'>
