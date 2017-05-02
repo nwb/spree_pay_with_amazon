@@ -14,8 +14,8 @@
   //the link from fixed checkout button for mobile
   $(document).ready(function() {
     $('#checkout-link').after($('#amazon-container'));
-    var size=$('#_checkout-fixed span').length;
-    var target_class='col-xs-' + 12/size ;
+    var size=$('#_checkout-fixed button').length;
+    var target_class='col-xs-' + 12/(size+1) ;
     $('#_checkout-fixed span').removeClass('col-xs-12').removeClass('col-xs-6').addClass("_inserted");
     $('#_checkout-fixed').append('<span class="_inserted"><button name="amazon_link" id="amazon_link" onclick="$(\'#AmazonPayButton img\').click();" type="button"><img src="/assets/ui/amazon_logo_trans.png"/> <div>Pay</div></button></span>');
     $('#_checkout-fixed span._inserted').addClass(target_class);
