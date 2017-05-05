@@ -7,15 +7,19 @@
 <%# @license     http://opensource.org/licenses/Apache-2.0  Apache License, Version 2.0 %>
 <%# %>
 <% content_for :head do %>
-  <meta name="viewport" content="width-device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <style>
+      .widget-container{position: inherit !important;}
+      .widget-contrainer iframe{height: auto;}
+    </style>
 
   <script type='text/javascript'>
     window.onAmazonLoginReady = function() {
       amazon.Login.setClientId('<%= Spree::Config[:amazon_client_id] %>');
       $('#continue_to_delivery').click();
       setTimeout(function(){
-        $('.widget-container').css('position', 'inherit');
-        $('iframe').css('height', 'auto');
+       // $('.widget-container').css('position', 'inherit');
+       // $('iframe').css('height', 'auto');
       },1500);
 
     };
@@ -39,6 +43,7 @@
           designMode: 'responsive'
         },
         onError: function(error) {
+          $('#deliveryOptionDiv input[type="submit"]').hide();
          console.log(error.getErrorMessage());
         }
       }).bind("addressBookWidgetDiv");
@@ -55,7 +60,7 @@
   </script>
 <% end %>
 
-<div class="row" style="margin-top:20px;clear:both;float:none;">
+<div class="amazon_page" style="margin-top:20px;clear:both;float:none;">
 
   <!--added the cart information here-->
   <div data-hook="outside_cart_form">
@@ -78,12 +83,12 @@
 
   <div class="clear" style="height:20px"></div>
 
-  <div class="col-md-6 col-xs-12" style="min-height:170px">
+  <div class="col-md-6 col-xs-12" >
     <div id="addressBookWidgetDiv">
     </div>
   </div>
 
-  <div class="col-md-6 col-xs-12">
+  <div class="col-md-6 col-xs-12" style="min-height:200px">
     <div id="walletWidgetDiv">
     </div>
   </div>
@@ -97,11 +102,9 @@
   </div>
 
 </div>
-
+<br>
 <script>
 $(document).ready(function() {
-  $('.widget-container').css('position', 'inherit');
-  $('iframe').css('height', 'auto');
 
   $('.line_item_quantity').on('change', function(){
     //update_weeks($(this).parents('tr').find('.current_weeks'), $(this).val());

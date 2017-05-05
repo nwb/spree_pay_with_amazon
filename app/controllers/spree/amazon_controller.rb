@@ -74,7 +74,9 @@ class Spree::AmazonController < Spree::StoreController
 
       data = @mws.fetch_order_data
 
-      if data.destination && data.destination["PhysicalDestination"]
+      Rails.logger.debug("data from mws for order comfirming: #{data.inspect}")
+
+      if data.destination && data.destination["PhysicalDestination"] && data.state=='Open'
         current_order.email = data.email
         current_order.save!
         address = data.destination["PhysicalDestination"]
@@ -92,7 +94,9 @@ class Spree::AmazonController < Spree::StoreController
                                 "country" => Spree::Country.find_by_iso(address["CountryCode"])})
         spree_address.save!
       else
-        raise "There is a problem with your order"
+        #raise "There is a problem with your order"
+        redirect_to address_amazon_order_path, :notice => "There is a problem with your order. #{ !!data.constraints ? data.constraints["Description"] : ""}"
+        return true
       end
       current_order.create_tax_charge!
       current_order.reload
