@@ -95,7 +95,7 @@ class Spree::AmazonController < Spree::StoreController
         spree_address.save!
       else
         #raise "There is a problem with your order"
-        redirect_to address_amazon_order_path, :notice => "There is a problem with your order. #{ !!data.constraints ? data.constraints["Description"] : ""}"
+        redirect_to cart_path, :notice => "There is a problem with your order. #{ !!data.constraints ? data.constraints["Description"] : ""}"
         return true
       end
       current_order.create_tax_charge!

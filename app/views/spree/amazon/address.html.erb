@@ -10,8 +10,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
     <style>
       .widget-container{position: inherit !important;}
-      .widget-contrainer iframe{height: auto;}
-    </style>
+      #addressBookWidgetDiv, #walletWidgetDiv {
+        width: 100%;
+      }
+      .widget-container h1{display:none;}
+      .widget-container iframe{
+         position: relative !important;
+        z-index: 0 !important;
+       top: auto !important;
+       left: auto !important;
+        }
+      .amazon_page .col-md-6{padding:0px}
+      </style>
 
   <script type='text/javascript'>
     window.onAmazonLoginReady = function() {
@@ -43,7 +53,7 @@
           designMode: 'responsive'
         },
         onError: function(error) {
-          $('#deliveryOptionDiv input[type="submit"]').hide();
+          $('#deliveryOptionDiv').hide();
          console.log(error.getErrorMessage());
         }
       }).bind("addressBookWidgetDiv");
@@ -88,7 +98,7 @@
     </div>
   </div>
 
-  <div class="col-md-6 col-xs-12" style="min-height:200px">
+  <div class="col-md-6 col-xs-12" style="">
     <div id="walletWidgetDiv">
     </div>
   </div>
@@ -97,12 +107,14 @@
     <%= link_to Spree.t(:save_and_continue), "/amazon_order/delivery", :class => 'btn btn-lg btn-success', :id => 'continue_to_delivery', :remote => true %>
   </div>
 
+  <div class="clear" style="height:20px"></div>
+
   <div id="deliveryOptionDiv" class="col-md-12" style="">
     Loading...
   </div>
 
 </div>
-<br>
+<div class="clear" style="height:20px"></div>
 <script>
 $(document).ready(function() {
 
