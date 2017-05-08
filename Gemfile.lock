@@ -74,8 +74,8 @@ GIT
 PATH
   remote: .
   specs:
-    spree_amazon_payments (2.3.4)
-      spree_core
+    spree_amazon_payments (3.0.0)
+      spree_core (~> 3.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -372,3 +372,6 @@ DEPENDENCIES
   spree_amazon_payments!
   spree_auth_devise!
   sqlite3
+
+BUNDLED WITH
+   1.11.2
