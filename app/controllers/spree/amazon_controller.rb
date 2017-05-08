@@ -26,9 +26,9 @@ class Spree::AmazonController < Spree::StoreController
     payment.number = params[:order_reference]
     payment.payment_method = Spree::PaymentMethod.find_by(:type => "Spree::Gateway::Amazon")
     payment.source ||= Spree::AmazonTransaction.create(:order_reference => params[:order_reference], :order_id => current_order.id)
-
+    payment.source.update_column :order_reference, params[:order_reference]
     payment.save!
-
+    Rails.logger.debug("payment data from post amazon payment: #{payment.inspect}")
     render json: {}.to_json
   end
 
@@ -36,6 +36,7 @@ class Spree::AmazonController < Spree::StoreController
     data = @mws.fetch_order_data
     @order = current_order
     current_order.state = 'cart'
+    Rails.logger.debug("data from mws for order delivery: #{data.inspect}")
 
     if data.destination && data.destination["PhysicalDestination"]
       current_order.email = "pending@amazon.com"
@@ -85,7 +86,7 @@ class Spree::AmazonController < Spree::StoreController
         spree_address = current_order.ship_address
         spree_address.update({
                                 "firstname" => first_name,
-                                "lastname" => last_name,
+                                "lastname" => last_name || "lastname",
                                 "address1" => address["AddressLine1"],
                                 "phone" => address["Phone"] || "n/a",
                                 "city" => address["City"],
@@ -95,6 +96,8 @@ class Spree::AmazonController < Spree::StoreController
         spree_address.save!
       else
         #raise "There is a problem with your order"
+        payment = current_order.payments.valid.first{|p| p.source_type == "Spree::AmazonTransaction"}
+        payment.update_column :state, 'invalid' unless !payment
         redirect_to cart_path, :notice => "There is a problem with your order. #{ !!data.constraints ? data.constraints["Description"] : ""}"
         return true
       end
@@ -131,6 +134,8 @@ class Spree::AmazonController < Spree::StoreController
       redirect_to spree.order_path(@order)
     else
       @order.state = 'cart'
+      payment = @order.payments.valid.first{|p| p.source_type == "Spree::AmazonTransaction"}
+      payment.update_column :state, 'invalid' unless !payment
       @order.amazon_transactions.destroy_all
       redirect_to cart_path, :notice => "Unable to process order"
       return true
