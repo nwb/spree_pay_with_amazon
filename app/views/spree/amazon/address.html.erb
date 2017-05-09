@@ -70,14 +70,14 @@
   </script>
 <% end %>
 
-<div class="amazon_page" style="margin-top:20px;clear:both;float:none;">
+<div class="amazon_page checkout_form_wrapper" style="margin-top:20px;clear:both;float:none;">
 
   <!--added the cart information here-->
   <div data-hook="outside_cart_form">
     <%= form_for current_order, :url => '/update_only', :html => {:id => 'update-cart'} do |order_form| %>
         <div class="inside_cart_form" data-hook="inside_cart_form">
 
-          <div data-hook="cart_items">
+          <div data-hook="cart_items" id="cart-detail">
             <%= render partial: 'spree/orders/form', locals: { order_form: order_form } %>
           </div>
 

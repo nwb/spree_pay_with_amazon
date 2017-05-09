@@ -19,6 +19,7 @@ class Spree::AmazonController < Spree::StoreController
     @order=current_order
     current_order.state = 'cart'
     current_order.save!
+    @body_class="_checkout _checkout-step2"
   end
 
   def payment
@@ -84,9 +85,10 @@ class Spree::AmazonController < Spree::StoreController
         first_name = address["Name"].split(" ")[0] rescue "Amazon"
         last_name = address["Name"].split(" ")[1..10].join(" ")
         spree_address = current_order.ship_address
+        #byebug
         spree_address.update({
                                 "firstname" => first_name,
-                                "lastname" => last_name || "lastname",
+                                "lastname" => last_name.blank? ? "-" : last_name,
                                 "address1" => address["AddressLine1"],
                                 "phone" => address["Phone"] || "n/a",
                                 "city" => address["City"],
