@@ -18,7 +18,7 @@
     </div>
 
     <% if payment.state != 'void' %>
-      <%= button_link_to Spree.t('actions.refund', :scope => :amazon), "#", :icon => 'icon-dollar' %>
+      <%= button_link_to Spree.t('actions.refund', :scope => :amazon), new_admin_order_payment_refund_path(@order, payment), :icon => 'icon-dollar' %>
     <% else %>
       <div class="alpha six columns">
         <dl>

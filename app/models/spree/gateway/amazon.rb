@@ -73,15 +73,25 @@ module Spree
       load_amazon_mws(order.amazon_order_reference_id)
       capture_id = order.amazon_transaction.capture_id
       response = @mws.refund(capture_id, gateway_options[:order_id], amount / 100.00, Spree::Config.currency)
-      return ActiveMerchant::Billing::Response.new(true, "Success", response)
+      if !response["ErrorResponse"]
+        return ActiveMerchant::Billing::Response.new(true, "Success", response)
+      else
+        return ActiveMerchant::Billing::Response.new(true, "failure", response)
+      end
     end
 
     def void(response_code, gateway_options)
+      byebug
       order = Spree::Order.find_by(:number => gateway_options[:order_id].split("-")[0])
       load_amazon_mws(order.amazon_order_reference_id)
       capture_id = order.amazon_transaction.capture_id
       response = @mws.refund(capture_id, gateway_options[:order_id], order.total, Spree::Config.currency)
-      return ActiveMerchant::Billing::Response.new(true, "Success", response)
+      if !response["ErrorResponse"]
+        return ActiveMerchant::Billing::Response.new(true, "Success", response)
+      else
+        return ActiveMerchant::Billing::Response.new(true, "failure", response)
+      end
+
     end
 
     def close(amount, amazon_checkout, gateway_options={})
