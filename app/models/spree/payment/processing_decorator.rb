@@ -13,7 +13,6 @@ Spree::Payment::Processing.class_eval do
   end
 
   def cancel!
-
     if payment_method.type=='Spree::Gateway::Amazon'
       #byebug
       if refunds.any?
@@ -29,7 +28,8 @@ Spree::Payment::Processing.class_eval do
       end
       #handle_response(response, :void, :failure)
     else
-        super
+      response = payment_method.cancel(response_code)
+      handle_response(response, :void, :failure)
     end
   end
 end
