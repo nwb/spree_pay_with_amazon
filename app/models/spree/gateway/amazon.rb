@@ -81,7 +81,7 @@ module Spree
     end
 
     def void(response_code, gateway_options)
-      byebug
+
       order = Spree::Order.find_by(:number => gateway_options[:order_id].split("-")[0])
       load_amazon_mws(order.amazon_order_reference_id)
       capture_id = order.amazon_transaction.capture_id
