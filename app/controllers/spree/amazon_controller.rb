@@ -80,7 +80,7 @@ class Spree::AmazonController < Spree::StoreController
 
       if data.destination && data.destination["PhysicalDestination"] && data.state=='Open'
         current_order.email = data.email
-        current_order.save!
+
         address = data.destination["PhysicalDestination"]
         first_name = address["Name"].split(" ")[0] rescue "Amazon"
         last_name = address["Name"].split(" ")[1..10].join(" ")
@@ -96,11 +96,14 @@ class Spree::AmazonController < Spree::StoreController
                                 "state_name" => address["StateOrRegion"],
                                 "country" => Spree::Country.find_by_iso(address["CountryCode"])})
         spree_address.save!
+        current_order.bill_address = spree_address.clone
+        current_order.save!
       else
         #raise "There is a problem with your order"
         payment = current_order.payments.valid.first{|p| p.source_type == "Spree::AmazonTransaction"}
         payment.update_column :state, 'invalid' unless !payment
         current_order.ship_address.destroy
+        current_order.bill_address.destroy
         if current_order.email == "pending@amazon.com"
           current_order.update_column :email, ""
           current_order.update_column :state, "cart"
