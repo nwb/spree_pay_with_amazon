@@ -10,8 +10,8 @@
 class Spree::AmazonController < Spree::StoreController
 
   helper 'spree/orders'
-  before_filter :check_for_current_order
-  before_filter :load_amazon_mws, except: [:address, :payment, :complete]
+  before_action :check_for_current_order
+  before_action :load_amazon_mws, except: [:address, :payment, :complete]
 
   respond_to :json
 
