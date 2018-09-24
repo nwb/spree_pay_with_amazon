@@ -116,14 +116,75 @@
 </div>
 <div class="clear" style="height:20px"></div>
 <script>
+   // no instant post for qty changes
+    function update_my_cart(){}
+
 $(document).ready(function() {
 
-  $('.line_item_quantity').on('change', function(){
+  //$('.line_item_quantity').on('change', function(){
     //update_weeks($(this).parents('tr').find('.current_weeks'), $(this).val());
     //update_my_cart();
-    $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
-  });
+  //  $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
+  //});
 
 });
+
+   adjustLineItem = function(line_item_id, quantity) {
+       var url;
+       url = lineItemURL(line_item_id);
+       return $.ajax({
+           type: "PUT",
+           url: Spree.url(url),
+           data: {
+               line_item: {
+                   quantity: quantity
+               },
+               order_token: Spree.api_key
+           }
+       }).done(function(msg) {
+           $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
+           //return window.Spree.advanceOrder();
+       });
+   };
+
+   deleteLineItem = function(line_item_id) {
+       var url;
+       url = lineItemURL(line_item_id);
+       return $.ajax({
+           type: "DELETE",
+           url: Spree.url(url),
+           data: {
+               token: Spree.api_key
+           }
+       }).done(function(msg) {
+           $('#line-item-' + line_item_id).remove();
+           if ($('.line-items tr.line-item').length === 0) {
+               $('.line-items').remove();
+           }
+           $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
+           //return window.Spree.advanceOrder();
+       });
+   };
+
+   $(document).ready(function() {
+
+       $('.line_item_quantity').on('change', function(){
+           var line_item_id, quantity, save;
+           save = $(this);
+           line_item_id = save.parents('tr').find("[id$=_id]").val() //data('line-item-id');
+           quantity = save.val(); //parseInt(save.parents('tr').find('input.line_item_quantity').val());
+
+           if (quantity==0)
+               return deleteLineItem(line_item_id);
+           else
+               adjustLineItem(line_item_id, quantity);
+           return false;
+
+           //update_my_cart();
+       });
+
+
+
+   });
 
 </script>
