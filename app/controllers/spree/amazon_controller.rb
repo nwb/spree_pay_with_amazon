@@ -102,8 +102,8 @@ class Spree::AmazonController < Spree::StoreController
         #raise "There is a problem with your order"
         payment = current_order.payments.valid.first{|p| p.source_type == "Spree::AmazonTransaction"}
         payment.update_column :state, 'invalid' unless !payment
-        current_order.ship_address.destroy
-        current_order.bill_address.destroy
+        if !!current_order.ship_address current_order.ship_address.destroy
+        if !!current_order.bill_address current_order.bill_address.destroy
         if current_order.email == "pending@amazon.com"
           current_order.update_column :email, ""
           current_order.update_column :state, "cart"
