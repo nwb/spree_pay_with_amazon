@@ -1,0 +1,48 @@
+<%# %>
+<%# Amazon Payments - Login and Pay for Spree Commerce %>
+<%# %>
+<%# @category    Amazon %>
+<%# @package     Amazon_Payments %>
+<%# @copyright   Copyright (c) 2014 Amazon.com %>
+<%# @license     http://opensource.org/licenses/Apache-2.0  Apache License, Version 2.0 %>
+<%# %>
+
+
+
+
+<%= form_for current_order, :url => confirm_amazon_order_path, :method => :post do |form| %>
+
+    <div class="clear"></div>
+    <div class="_shipping">
+      <%= render :partial => 'spree/checkout/shipping' %>
+    </div>
+    <div class="clear"></div>
+  
+<%# @order.all_adjustments.tax.eligible.group_by(&:label).each do |label, adjustments| %>
+<%#= render "spree/orders/adjustment_row", :label => label, :adjustments => adjustments, :type => Spree.t(:tax) %>
+<%# end %>
+<% amount=@order.all_adjustments.tax.eligible.sum(:amount)
+   if amount>0 %>
+  <div class="left"><%#= type %> <%= Spree.t(:tax) %>:</div>
+  <div class="right original_price tax_preview_total"><%= Spree::Money.new(amount, :currency => @order.currency) %> </div>
+  <div class="clear"></div>
+<% end %>
+
+<%# @order.adjustments.eligible.group_by(&:label).each do |label, adjustments| %>
+<%#= render "spree/orders/adjustment_row", :label => label, :adjustments => adjustments, :type => Spree.t(:adjustment) %>
+<%# end %>
+
+<%if current_store.code=="pwbuk"%>
+  <div class="left price_summary_label"><%= Spree.t(:total) %>: <span style="padding-left: 4px;font-size: 11px;">(VAT Included)</span></div>
+<%else%>
+  <div class="left price_summary_label"><%= Spree.t(:total) %>: </div>
+<%end%>
+<div class="right cart_preview_total price_summary">(<%= current_currency %>)<%= @order.display_total %></div>
+
+  <div class=" text-right form-buttons" data-hook="buttons">
+    <%= submit_tag Spree.t(:place_order), :class => 'btn btn-lg btn-success' %>
+  </div>
+
+  <%#= render partial: 'spree/checkout/delivery', locals: {form: form} %>
+
+<% end %>

@@ -12,3 +12,7 @@
 /* widget renders in the optimal size allowed.              */
 
 #addressBookWidgetDiv, #walletWidgetDiv { height: 228px; width: 100%; }
+#calculator_available_methods .second{ text-align: left; padding-right: 10px;}
+
+#calculator_available_methods input[type="radio"] {  margin: 4px 8px 0;}
+

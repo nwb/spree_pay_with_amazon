@@ -26,12 +26,7 @@
   <script type='text/javascript'>
     window.onAmazonLoginReady = function() {
       amazon.Login.setClientId('<%= Spree::Config[:amazon_client_id] %>');
-      $('#continue_to_delivery').click();
-      setTimeout(function(){
-       // $('.widget-container').css('position', 'inherit');
-       // $('iframe').css('height', 'auto');
-      },1500);
-
+        $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery');
     };
   </script>
   <script type='text/javascript'
@@ -108,9 +103,10 @@
   </div>
 
   <div class="clear" style="height:20px"></div>
-
+  <div id="shipping_calculator">
   <div id="deliveryOptionDiv" class="col-md-12" style="">
     Loading...
+  </div>
   </div>
 
 </div>
@@ -130,6 +126,13 @@ $(document).ready(function() {
 });
 
    adjustLineItem = function(line_item_id, quantity) {
+       $.blockUI({
+           message: '<div style="padding:18px;"><i class="fa fa-refresh fa-spin" style="font-size:68px"></i></div>',
+           centerX: true, // set these to true if ever switching to use BlockUI centering
+           centerY: true,
+           fadeIn: 0,
+           fadeOut: 0
+       });
        var url;
        url = lineItemURL(line_item_id);
        return $.ajax({
@@ -142,12 +145,20 @@ $(document).ready(function() {
                order_token: Spree.api_key
            }
        }).done(function(msg) {
+           $.unblockUI();
            $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
            //return window.Spree.advanceOrder();
        });
    };
 
    deleteLineItem = function(line_item_id) {
+       $.blockUI({
+           message: '<div style="padding:18px;"><i class="fa fa-refresh fa-spin" style="font-size:68px"></i></div>',
+           centerX: true, // set these to true if ever switching to use BlockUI centering
+           centerY: true,
+           fadeIn: 0,
+           fadeOut: 0
+       });
        var url;
        url = lineItemURL(line_item_id);
        return $.ajax({
@@ -161,6 +172,7 @@ $(document).ready(function() {
            if ($('.line-items tr.line-item').length === 0) {
                $('.line-items').remove();
            }
+           $.unblockUI();
            $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
            //return window.Spree.advanceOrder();
        });
