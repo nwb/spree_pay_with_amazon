@@ -107,13 +107,13 @@
   <div id="deliveryOptionDiv" class="col-md-12" style="">
     Loading...
   </div>
-
+  </div>
 
 </div>
 <div class="clear" style="height:20px"></div>
 <script>
    // no instant post for qty changes
-    function update_my_cart(){}
+    //function update_my_cart(){}
 
 $(document).ready(function() {
 
@@ -125,78 +125,5 @@ $(document).ready(function() {
 
 });
 
-   adjustLineItem = function(line_item_id, quantity) {
-       $.blockUI({
-           message: '<div style="padding:18px;"><i class="fa fa-refresh fa-spin" style="font-size:68px"></i></div>',
-           centerX: true, // set these to true if ever switching to use BlockUI centering
-           centerY: true,
-           fadeIn: 0,
-           fadeOut: 0
-       });
-       var url;
-       url = lineItemURL(line_item_id);
-       return $.ajax({
-           type: "PUT",
-           url: Spree.url(url),
-           data: {
-               line_item: {
-                   quantity: quantity
-               },
-               order_token: Spree.api_key
-           }
-       }).done(function(msg) {
-           $.unblockUI();
-           $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
-           //return window.Spree.advanceOrder();
-       });
-   };
-
-   deleteLineItem = function(line_item_id) {
-       $.blockUI({
-           message: '<div style="padding:18px;"><i class="fa fa-refresh fa-spin" style="font-size:68px"></i></div>',
-           centerX: true, // set these to true if ever switching to use BlockUI centering
-           centerY: true,
-           fadeIn: 0,
-           fadeOut: 0
-       });
-       var url;
-       url = lineItemURL(line_item_id);
-       return $.ajax({
-           type: "DELETE",
-           url: Spree.url(url),
-           data: {
-               token: Spree.api_key
-           }
-       }).done(function(msg) {
-           $('#line-item-' + line_item_id).remove();
-           if ($('.line-items tr.line-item').length === 0) {
-               $('.line-items').remove();
-           }
-           $.unblockUI();
-           $('#deliveryOptionDiv').html('Updating...').load('/amazon_order/delivery')
-           //return window.Spree.advanceOrder();
-       });
-   };
-
-   $(document).ready(function() {
-
-       $('.line_item_quantity').on('change', function(){
-           var line_item_id, quantity, save;
-           save = $(this);
-           line_item_id = save.parents('tr').find("[id$=_id]").val() //data('line-item-id');
-           quantity = save.val(); //parseInt(save.parents('tr').find('input.line_item_quantity').val());
-
-           if (quantity==0)
-               return deleteLineItem(line_item_id);
-           else
-               adjustLineItem(line_item_id, quantity);
-           return false;
-
-           //update_my_cart();
-       });
-
-
-
-   });
 
 </script>
