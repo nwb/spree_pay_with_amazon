@@ -7,9 +7,9 @@
 <%# @license     http://opensource.org/licenses/Apache-2.0  Apache License, Version 2.0 %>
 <%# %>
 
-
-
-
+<% unless @order.ship_address.valid? and @order.ship_address.address1!='TBD'%>
+  <p>Please select or input your address!</p>
+<%else%>
 <%= form_for current_order, :url => confirm_amazon_order_path, :method => :post do |form| %>
 
     <div class="clear"></div>
@@ -23,4 +23,5 @@
 
     <%#= render partial: 'spree/checkout/delivery', locals: {form: form} %>
 
+<% end %>
 <% end %>
