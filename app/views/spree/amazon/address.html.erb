@@ -42,6 +42,7 @@
                   order_reference = orderReference.getAmazonOrderReferenceId();
               },
               onAddressSelect: function(orderReference) {
+                  $('#continue_to_delivery').click();
                   <%= render 'spree/amazon/payment' %>
               },
               design: {
